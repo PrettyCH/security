@@ -21,10 +21,10 @@ public class LoginServiceImpl implements ILoginService {
     @Override
     public RespBean<TmUser> login(LoginFromDto from) {
         QueryWrapper<TmUser> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("user_name",from.getUserAccount()).eq("user_pwd", from.getUserPwd());
+        queryWrapper.eq("user_id",from.getUserAccount()).eq("user_pwd", from.getUserPwd());
         List<TmUser> userList = userMapper.selectList(queryWrapper);
         boolean b = MyUtil.emptyList(userList);
-        if(!b){
+        if(b){
             return RespBean.error(null,"用户账户或密码有错");
         }
         if(userList.size()!=1){

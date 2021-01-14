@@ -1,17 +1,12 @@
 package com.CH.security.config;
 
 import com.baomidou.mybatisplus.core.exceptions.MybatisPlusException;
-import com.baomidou.mybatisplus.core.toolkit.StringPool;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.generator.AutoGenerator;
-import com.baomidou.mybatisplus.generator.InjectionConfig;
 import com.baomidou.mybatisplus.generator.config.*;
-import com.baomidou.mybatisplus.generator.config.po.TableInfo;
 import com.baomidou.mybatisplus.generator.config.rules.NamingStrategy;
 import com.baomidou.mybatisplus.generator.engine.FreemarkerTemplateEngine;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 
 public class MPGenerateCode {
@@ -108,8 +103,10 @@ public class MPGenerateCode {
 
 //         配置自定义输出模板
 //        指定自定义模板路径，注意不要带上.ftl/.vm, 会根据使用的模板引擎自动识别
-//         templateConfig.setEntity("com.CH.security");
-//         templateConfig.setService("");
+//         templateConfig.setEntity("com.CH.security");4
+        templateConfig.setServiceImpl(" ");
+//         templateConfig.setMapper(" ");
+         templateConfig.setService("");
          templateConfig.setController("");
 
         templateConfig.setXml(null);
@@ -122,7 +119,6 @@ public class MPGenerateCode {
         strategy.setEntityLombokModel(true);
         strategy.setRestControllerStyle(true);
         // 写于父类中的公共字段
-        strategy.setSuperEntityColumns("id");
         strategy.setInclude(scanner("表名，多个英文逗号分割").split(","));
         strategy.setControllerMappingHyphenStyle(true);
         strategy.setTablePrefix(pc.getModuleName() + "_");

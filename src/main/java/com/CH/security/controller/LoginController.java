@@ -1,11 +1,13 @@
 package com.CH.security.controller;
 
+import com.CH.security.annotations.NoLogin;
 import com.CH.security.entity.TmUser;
 import com.CH.security.model.dto.LoginFromDto;
 import com.CH.security.service.ILoginService;
 import com.CH.security.utils.RespBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -30,5 +32,10 @@ public class LoginController {
             return RespBean.error(null, bindingResult.getFieldError().getDefaultMessage());
         }
         return loginService.login(from);
+    }
+
+    @GetMapping("/test")
+    public RespBean<String> test(){
+        return RespBean.ok("success");
     }
 }
