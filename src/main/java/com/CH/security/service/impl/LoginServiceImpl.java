@@ -6,6 +6,7 @@ import com.CH.security.model.dto.LoginFromDto;
 import com.CH.security.service.ILoginService;
 import com.CH.security.utils.MyUtil;
 import com.CH.security.utils.RespBean;
+import com.CH.security.utils.TokenUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +20,7 @@ public class LoginServiceImpl implements ILoginService {
     TmUserMapper userMapper;
 
     @Override
-    public RespBean<TmUser> login(LoginFromDto from) {
+    public RespBean<String> login(LoginFromDto from) {
         QueryWrapper<TmUser> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("user_id",from.getUserAccount()).eq("user_pwd", from.getUserPwd());
         List<TmUser> userList = userMapper.selectList(queryWrapper);
@@ -30,6 +31,7 @@ public class LoginServiceImpl implements ILoginService {
         if(userList.size()!=1){
             return RespBean.error(null,"用户出错，用户账户不唯一");
         }
-        return RespBean.ok(userList.get(0));
+        String token = TokenUtil.getToken(userList.get(0));
+        return RespBean.ok(token);
     }
 }

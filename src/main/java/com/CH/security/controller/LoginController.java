@@ -26,14 +26,25 @@ public class LoginController {
     @Resource
     ILoginService loginService;
 
+    /**
+     * 登录成功将token返回回去
+     * @param from
+     * @param bindingResult
+     * @return
+     */
+    @NoLogin
     @PostMapping("/userLogin")
-    public RespBean<TmUser> userLogin(@Valid LoginFromDto from,BindingResult bindingResult){
+    public RespBean<String> userLogin(@Valid LoginFromDto from,BindingResult bindingResult){
         if (bindingResult.hasErrors()) {
             return RespBean.error(null, bindingResult.getFieldError().getDefaultMessage());
         }
         return loginService.login(from);
     }
 
+    /**
+     * token测试
+     * @return
+     */
     @GetMapping("/test")
     public RespBean<String> test(){
         return RespBean.ok("success");
