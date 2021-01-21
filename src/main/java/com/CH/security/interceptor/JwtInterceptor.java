@@ -4,11 +4,14 @@ import com.CH.security.annotations.NoLogin;
 import com.CH.security.entity.TmUser;
 import com.CH.security.service.IUserService;
 import com.CH.security.utils.RespBean;
+import com.CH.security.utils.TokenUtil;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.auth0.jwt.interfaces.DecodedJWT;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 
@@ -24,6 +27,9 @@ import java.lang.reflect.Method;
  * 对拦截下来的请求进行token校验
  */
 public class JwtInterceptor implements HandlerInterceptor {
+    @Value("${config.jwt.secret:'testToken'}")
+    private   String SECRET;
+
     @Resource
     private IUserService userService;
 
@@ -49,26 +55,28 @@ public class JwtInterceptor implements HandlerInterceptor {
             throw new RuntimeException("无token，请重新登录");
         }
         // 获取 token 中的 user id
-        String userId;
+        Long id;
         try {
-            userId = JWT.decode(token).getAudience().get(0);
+            id = TokenUtil.analyzeToken(token);
         } catch (JWTDecodeException j) {
             throw new RuntimeException("token中无用户信息，请重新登录");
         }
-
-        RespBean<TmUser> r = userService.getUserByUserId(userId);
+        RespBean<TmUser> r = userService.getUserById(id);
         if (r.isError()) {
             throw new RuntimeException("用户不存在，请重新登录");
         }
         // 验证 token
-        JWTVerifier jwtVerifier = JWT.require(Algorithm.HMAC256(r.getData().getUserPwd())).build();
+
         try {
-            jwtVerifier.verify(token);
+            boolean b = TokenUtil.verifyToken(token, SECRET);
+            if(b){
+                return true;
+            }else {
+              throw new RuntimeException("token令牌无效，请重新登录");
+            }
         } catch (JWTVerificationException e) {
             throw new RuntimeException("token中无用户信息，请重新登录");
         }
-        return true;
-
     }
 
 

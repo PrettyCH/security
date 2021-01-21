@@ -10,4 +10,5 @@ import com.CH.security.utils.RespBean;
  */
 public interface IUserService {
     RespBean<TmUser> getUserByUserId(String userId);
+    RespBean<TmUser> getUserById(long id);
 }

@@ -8,6 +8,7 @@ import com.CH.security.utils.MyUtil;
 import com.CH.security.utils.RespBean;
 import com.CH.security.utils.TokenUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -15,6 +16,13 @@ import java.util.List;
 
 @Service
 public class LoginServiceImpl implements ILoginService {
+
+    @Value("${config.jwt.secret:'testToken'}")
+    private   String SECRET;
+
+    // 过期时间是3600秒，既是1个小时
+    @Value("${config.jwt.expire:'3600'}")
+    private   long EXPIRATION;
 
     @Resource
     TmUserMapper userMapper;
@@ -31,7 +39,11 @@ public class LoginServiceImpl implements ILoginService {
         if(userList.size()!=1){
             return RespBean.error(null,"用户出错，用户账户不唯一");
         }
-        String token = TokenUtil.getToken(userList.get(0));
+        String token = TokenUtil.createToken(userList.get(0).getId(),SECRET,EXPIRATION);
         return RespBean.ok(token);
     }
+
+
+
+
 }
