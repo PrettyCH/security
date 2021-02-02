@@ -1,11 +1,9 @@
 package com.CH.security.utils;
 
-import com.CH.security.entity.TmUser;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import org.springframework.beans.factory.annotation.Value;
 
 import java.util.Date;
 
@@ -26,7 +24,9 @@ public class TokenUtil {
     public static String createToken(long userId,String secret,Long expiration){
         Algorithm algorithm = Algorithm.HMAC384(secret);
         String token = JWT.create()
-                .withIssuer(ISS).withIssuedAt(new Date()).withExpiresAt(new Date(System.currentTimeMillis() + expiration * 1000))
+                .withIssuer(ISS)
+                .withIssuedAt(new Date())
+                .withExpiresAt(new Date(System.currentTimeMillis() + expiration*1000))
                 .withClaim("USER_ID",userId)
                 .sign(algorithm);
 
@@ -34,7 +34,7 @@ public class TokenUtil {
     }
 
     /**
-     * 解析token
+     * 解析token获取用户ID
      * @param token token
      * @return long
      */
@@ -60,5 +60,9 @@ public class TokenUtil {
             return false;
         }
         return true;
+    }
+
+    public static void main(String[] args) {
+        System.out.println(new Date(System.currentTimeMillis()+60*1000));
     }
 }

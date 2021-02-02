@@ -70,6 +70,12 @@ public class RespBean<T> {
         return ajaxResult;
     }
 
+    public static RespBean<String> noLogin(String msg) {
+        RespBean<String> ajaxResult = new RespBean(AjaxStatusEnum.NOLOGIN.getCode());
+        ajaxResult.setMsg(msg);
+        return ajaxResult;
+    }
+
     public static RespBean<String> notFound() {
         RespBean<String> ajaxResult = new RespBean(AjaxStatusEnum.ERROR.getCode());
         ajaxResult.setMsg("资源未找到");

@@ -10,5 +10,8 @@ public class LoginFromDto {
     private String userAccount;
     @NotBlank(message = "用户密码不可为空")
     private String userPwd;
-    private String code;
+    @NotBlank(message = "验证码标示不可为空")
+    private String uuid;
+    @NotBlank(message = "验证码不可为空")
+    private String vsCode;
 }
