@@ -67,6 +67,11 @@ public class TmRole implements Serializable {
      */
     private Long updator;
 
+//    /**
+//     * 最后修改时间
+//     */
+//    private LocalDateTime updateTime;
+
     /**
      * 最后修改时间
      */
