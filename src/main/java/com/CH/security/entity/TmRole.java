@@ -28,6 +28,11 @@ public class TmRole implements Serializable {
     private Long id;
 
     /**
+     * ID
+     */
+//    @TableId(value = "id", type = IdType.AUTO)
+//    private Long id;
+    /**
      * 角色编号
      */
     private String roleId;
