@@ -24,7 +24,7 @@ import java.lang.reflect.Method;
  * 对拦截下来的请求进行token校验
  */
 public class JwtInterceptor implements HandlerInterceptor {
-    @Value("${config.jwt.secret:'testToken'}")
+    @Value("${config.jwt.secret}")
     private   String SECRET;
 
     @Resource

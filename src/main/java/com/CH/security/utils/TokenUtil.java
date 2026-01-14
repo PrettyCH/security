@@ -5,6 +5,8 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 
+import java.security.interfaces.RSAPrivateKey;
+import java.security.interfaces.RSAPublicKey;
 import java.util.Date;
 
 /**
@@ -17,12 +19,33 @@ public class TokenUtil {
     private final static String ISS = "CH";
 
     /**
-     * 生成token
+     * 生成token - 使用HMAC384对称算法
      * @param userId 用户id
+     * @param secret 密钥
+     * @param expiration 过期时间（秒）
      * @return token
      */
-    public static String createToken(long userId,String secret,Long expiration){
+    public static String createToken(long userId, String secret, Long expiration){
         Algorithm algorithm = Algorithm.HMAC384(secret);
+        String token = JWT.create()
+                .withIssuer(ISS)
+                .withIssuedAt(new Date())
+                .withExpiresAt(new Date(System.currentTimeMillis() + expiration*1000))
+                .withClaim("USER_ID",userId)
+                .sign(algorithm);
+
+        return token;
+    }
+
+    /**
+     * 生成token - 使用RSA非对称算法
+     * @param userId 用户id
+     * @param privateKey RSA私钥
+     * @param expiration 过期时间（秒）
+     * @return token
+     */
+    public static String createToken(long userId, RSAPrivateKey privateKey, Long expiration){
+        Algorithm algorithm = Algorithm.RSA256(null, privateKey);
         String token = JWT.create()
                 .withIssuer(ISS)
                 .withIssuedAt(new Date())
@@ -44,12 +67,33 @@ public class TokenUtil {
     }
 
     /**
-     * 校验token的合法性
+     * 校验token的合法性 - 使用HMAC384对称算法
      * @param token token
-     * @return  boolean
+     * @param secret 密钥
+     * @return boolean
      */
-    public static boolean verifyToken(String token,String secret){
+    public static boolean verifyToken(String token, String secret){
         Algorithm algorithm = Algorithm.HMAC384(secret);
+        JWTVerifier verifier = JWT.require(algorithm)
+                .withIssuer(ISS)
+                .build(); //Reusable verifier instance
+        try {
+            // 验证不通过会出现异常
+            verifier.verify(token);
+        } catch(Exception ex){
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * 校验token的合法性 - 使用RSA非对称算法
+     * @param token token
+     * @param publicKey RSA公钥
+     * @return boolean
+     */
+    public static boolean verifyToken(String token, RSAPublicKey publicKey){
+        Algorithm algorithm = Algorithm.RSA256(publicKey, null);
         JWTVerifier verifier = JWT.require(algorithm)
                 .withIssuer(ISS)
                 .build(); //Reusable verifier instance
