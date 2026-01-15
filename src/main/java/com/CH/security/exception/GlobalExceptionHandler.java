@@ -21,7 +21,7 @@ public class GlobalExceptionHandler {
 
     @ResponseBody
     @ExceptionHandler(BaseErrorException.class)
-    public RespBean<String> BaseErrorHandle(NoLoginException e){
+    public RespBean<String> baseErrorHandle(BaseErrorException e){
         return RespBean.error(e.getMessage());
     }
 }
