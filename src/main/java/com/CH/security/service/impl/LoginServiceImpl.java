@@ -84,7 +84,7 @@ public class LoginServiceImpl implements ILoginService {
         String cachedCode = VALIDATION_CODE_CACHE.getIfPresent(uuid);
         
         if(cachedCode == null){
-            log.warn("登录失败，验证码已过期，账户: {}", from.getUserAccount());
+            log.warn("登录失败2，验证码已过期，账户: {}", from.getUserAccount());
             return RespBean.error(null,"该验证码已过期");
         }
         
